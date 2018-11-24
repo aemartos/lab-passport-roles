@@ -2,9 +2,8 @@
 <h1 class="capitalize">{{this.username}}</h1>
 <h2>{{this.role}}</h2>
 <div class="actions">
-  {{!-- <p>{{@root.user._id}}  {{this._id}}</p> --}}
-  {{#equal @root.user._id this._id}}
+  {{#if @root.canEdit}}
     <a href="/users/{{this._id}}/edit" class="btn btn-success roundedBtn">Edit</a>
-  {{/equal}}
+  {{/if}}
   <a href="/users" class="btn btn-primary roundedBtn">Users list</a>
 </div>

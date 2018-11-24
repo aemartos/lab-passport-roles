@@ -7,9 +7,10 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 
 
-userRoutes.get('/users/:userId/profile', (req, res, next) => {
-  User.findById(req.params.userId).then(userr => {
-    res.render('users/profile',{userr})
+userRoutes.get('/users/:userId/profile', isLoggedIn('/login'), (req, res, next) => {
+  const canEdit = req.user.role == 'Boss' || req.user._id.equals(req.params.userId) ? true : false;
+  User.findById(req.params.userId).then(profileUser => {
+    res.render('users/profile',{profileUser, canEdit})
   }).catch((error)=> {
     console.log(`Can't show user profile`)
     res.render('/users');
@@ -53,16 +54,19 @@ userRoutes.get('/users/:userId/delete', [isLoggedIn('/login'), roleCheck(["Boss"
   });
 });
 
-userRoutes.get('/users/:userId/edit', (req,res) => {
+userRoutes.get('/users/:userId/edit', isLoggedIn('/login'), (req,res) => {
   User.findById(req.params.userId).then(user => {
-    res.render('users/edit', {user})
+    if(req.user._id.equals(req.params.userId) || req.user.role == 'Boss') {
+      res.render('users/edit', {user});
+    }
   }).catch((error)=> {
     console.log(error);
+    req.flash('error',`You are not allowed to edit this profile`);
     res.render(`users/${req.params.userId}/profile`);
   });
 });
 
-userRoutes.post('/users/:userId/edit', (req,res) => {
+userRoutes.post('/users/:userId/edit', isLoggedIn('/login'), (req,res) => {
   const salt = bcrypt.genSaltSync(10);
   const hashPass = bcrypt.hashSync(req.body.password, salt);
   const user = {

@@ -1,9 +1,9 @@
 <div class="userInList">
   <h4><a class="capitalize" href="/users/{{this._id}}/profile">{{this.username}}</a></h4>
   <div class="actions">
-    {{#equal @root.user.role "Boss"}}
+    {{#if @root.BOSS}}
       <a href="/users/{{this._id}}/edit" class="btn btn-success">Edit</a>
       <a href="/users/{{this._id}}/delete" class="btn btn-warning">Delete</a>
-    {{/equal}}
+    {{/if}}
   </div>
 </div>

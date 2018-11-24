@@ -10,24 +10,24 @@ router.get('/', (req, res, next) => {
   res.render('index');
 });
 
-router.get('/users', [isLoggedIn('/login'), roleCheck(["Boss", "Developer", "TA", "Student"])],(req,res) => {
-  // User.find((err, users) => {
-  //   res.render('users', {users});
-  // });
+router.get('/users', isLoggedIn('/login'), (req,res) => {
+  const canSee = req.user.role == 'Boss' || req.user.role == 'TA' || req.user.role == 'Developer' ? true : false;
+  const BOSS = req.user.role == 'Boss' ? true : false;
   User.find({role: 'Student'}, (err, students) => {
     User.find({role: {$ne: 'Student'}}, (err, users) => {
-      res.render('users', {students, users});
+      res.render('users', {students, users, canSee, BOSS});
     });
   });
 });
 
-router.get('/courses', [isLoggedIn('/login'), roleCheck(["Boss", "Developer", "TA", "Student"])],(req,res) => {
+router.get('/courses', isLoggedIn('/login'), (req,res) => {
+  const TA = req.user.role == 'TA' ? true : false;
   Course.find((err, courses) => {
-    res.render('courses', {courses});
+    res.render('courses', {courses, TA});
   });
 });
 
-router.get('/main', [isLoggedIn('/login'), roleCheck(["Boss", "Developer", "TA", "Student"])],(req,res) => {
+router.get('/main', isLoggedIn('/login'), (req,res) => {
   res.render('main');
 });
 

@@ -1,39 +1,20 @@
 
 <div class="usersContainer">
   <h2>This is the list of users</h2>
-
-  {{#equal @root.user.role "Boss"}}
+  {{#if canSee}}
     <h3>Administration:</h3>
     {{#each users}}
       {{> userList}}
     {{/each}}
     </br>
     <h3>Students:</h3>
-  {{/equal}}
-
-  {{#equal @root.user.role "Developer"}}
-    <h3>Administration:</h3>
-    {{#each users}}
-      {{> userList}}
-    {{/each}}
-    </br>
-    <h3>Students:</h3>
-  {{/equal}}
-
-  {{#equal @root.user.role "TA"}}
-    <h3>Administration:</h3>
-    {{#each users}}
-      {{> userList}}
-    {{/each}}
-    </br>
-    <h3>Students:</h3>
-  {{/equal}}
+  {{/if}}
 
   {{#each students}}
     {{> userList}}
   {{/each}}
 
-  {{#equal @root.user.role "Boss"}}
+  {{#if BOSS}}
     <a href="/users/add" class="btn btn-secondary btnAdd roundedBtn w100">Add user</a>
-  {{/equal}}
+  {{/if}}
 </div>
